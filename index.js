@@ -6,12 +6,13 @@ import {
   globalErrorHandler,
   notFoundHandler,
 } from "./src/middleware/errorHandler.js";
-import { successResponse, errorResponse } from "./src/lib/responseUtils.js";
+import { successResponse } from "./src/lib/responseUtils.js";
 
 // Import routes
 import exampleRoutes from "./src/routes/exampleRoutes.js";
 import db from "./src/lib/db.js";
 import { connectToRedis } from "./src/lib/redis.js";
+import router from "./src/routes/index.js";
 
 // Load environment variables
 dotenv.config();
@@ -31,6 +32,7 @@ app.get("/", (req, res) => {
 });
 
 // Routes
+app.use("/api",router );
 app.use("/api/example", exampleRoutes);
 
 // 404 handler - must be after all routes
