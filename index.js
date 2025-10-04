@@ -10,6 +10,8 @@ import { successResponse, errorResponse } from "./src/lib/responseUtils.js";
 
 // Import routes
 import exampleRoutes from "./src/routes/exampleRoutes.js";
+import db from "./src/lib/db.js";
+import { connectToRedis } from "./src/lib/redis.js";
 
 // Load environment variables
 dotenv.config();
@@ -20,15 +22,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(morgan("dev"));
 app.use(cors());
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Health check route
 app.get("/", (req, res) => {
-    successResponse(res,null,"The service is healthy and running!");
+  successResponse(res, null, "The service is healthy and running!");
 });
-
-
 
 // Routes
 app.use("/api/example", exampleRoutes);
@@ -39,7 +39,18 @@ app.use(notFoundHandler);
 // Global error handler - must be last
 app.use(globalErrorHandler);
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || "development"}`);
-});
+db()
+  .then(() => {
+    connectToRedis().catch((err) => {
+      console.error("Failed to connect to Redis", err);
+      process.exit(1);
+    });
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || "development"}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to connect to the database", err);
+    process.exit(1);
+  });
