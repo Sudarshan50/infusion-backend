@@ -6,7 +6,12 @@ const deviceRouter = e.Router()
 
 deviceRouter.post('/create',device.create);
 deviceRouter.post('/health',device.createHealthCheck);
-deviceRouter.get('/status/:deviceId',device.getStatus);
+
+// Device control endpoints
+deviceRouter.post('/start/:deviceId', device.start);
+deviceRouter.post('/stop/:deviceId', device.stop);
+deviceRouter.post('/pause/:deviceId', device.pause);
+deviceRouter.post('/resume/:deviceId', device.resume);
 
 
 export default deviceRouter;

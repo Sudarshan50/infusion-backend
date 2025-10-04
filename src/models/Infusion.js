@@ -40,11 +40,6 @@ const InfusionSchema = new Schema(
         patientDetailSkipped: { type: Boolean, default: false },
         attendee: { type: Schema.Types.ObjectId, ref: "User" },
         ts: { type: Date, default: Date.now },
-        status: {
-            type: String,
-            enum: ["planned", "running", "paused", "completed", "cancelled", "error"],
-            default: "planned",
-        },
         patient: PatientSubSchema,
         infusion_detail: InfusionDetailSchema,
     },

@@ -9,20 +9,39 @@ const DEVICE_ID = 'PUMP_0001';
 const BASE_URL = 'http://localhost:3000';
 const HEALTH_CHECK_INTERVAL = 10000; // 10 seconds
 
+// Enum for device statuses
+const DeviceStatus = Object.freeze({
+    HEALTHY: "healthy",
+    ISSUE: "issue",
+    RUNNING: "running",
+    PAUSED: "paused",
+    STOPPED: "stopped",
+    DEGRADED: "degraded"
+});
+
 // Valid status options as per the controller
-const VALID_STATUSES = ["healthy", "issue", "running", "paused", "stopped", "degraded"];
+const VALID_STATUSES = Object.values(DeviceStatus);
 
 let healthCheckCount = 0;
 
 // Function to get a random status (or cycle through them for demonstration)
 function getDeviceStatus() {
-    const statusCycle = ["healthy", "running", "healthy", "running", "healthy", "paused"];
+    const statusCycle = [
+        DeviceStatus.HEALTHY,
+        DeviceStatus.RUNNING,
+        DeviceStatus.HEALTHY,
+        DeviceStatus.RUNNING,
+        DeviceStatus.HEALTHY,
+        DeviceStatus.PAUSED,
+        DeviceStatus.ISSUE
+    ];
     return statusCycle[healthCheckCount % statusCycle.length];
 }
 
 async function sendHealthCheck() {
     healthCheckCount++;
     const timestamp = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+    // Use enum for status
     const deviceStatus = getDeviceStatus();
     
     console.log(`\n🏥 Health Check #${healthCheckCount} - ${timestamp}`);
@@ -71,12 +90,12 @@ async function sendHealthCheck() {
 // Helper function to get emoji for status
 function getStatusEmoji(status) {
     const statusEmojis = {
-        healthy: '💚',
-        running: '🟢',
-        paused: '🟡',
-        stopped: '🔴',
-        issue: '⚠️',
-        degraded: '🟠'
+        [DeviceStatus.HEALTHY]: '💚',
+        [DeviceStatus.RUNNING]: '🟢',
+        [DeviceStatus.PAUSED]: '🟡',
+        [DeviceStatus.STOPPED]: '🔴',
+        [DeviceStatus.ISSUE]: '⚠️',
+        [DeviceStatus.DEGRADED]: '🟠'
     };
     return statusEmojis[status] || '❓';
 }
