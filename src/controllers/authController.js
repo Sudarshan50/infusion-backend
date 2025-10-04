@@ -44,49 +44,49 @@ auth.createUser = asyncErrorHandler(async (req, res) => {
 });
 
 auth.login = asyncErrorHandler(async (req, res) => {
-    const { email, passWord, deviceId } = req.body;
-    const error = [];
-    if (!passWord) {
-        error.push("Password is required");
-    }
-    if (!email) {
-        error.push("Email is required");
-    }
-    if (error.length > 0) {
-        throw new BadRequestError(error.join(", "));
-    }
-    const user = await User.findOne({ email: email });
-    if (!user) {
-        throw new ForbiddenError("Invalid email or password");
-    }
-    if (user.role === "attendee" && !deviceId) {
-        throw new BadRequestError("Device ID is required for attendee login");
-    }
-    const deviceCheck = await Device.findOne({ deviceId: deviceId });
-    if (user.role === "attendee" && !deviceCheck) {
-        throw new ForbiddenError("Invalid Device ID");
-    }
+  const { email, passWord, deviceId } = req.body;
+  const error = [];
+  if (!passWord) {
+    error.push("Password is required");
+  }
+  if (!email) {
+    error.push("Email is required");
+  }
+  if (error.length > 0) {
+    throw new BadRequestError(error.join(", "));
+  }
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    throw new ForbiddenError("Invalid email or password");
+  }
+  if (user.role === "attendee" && !deviceId) {
+    throw new BadRequestError("Device ID is required for attendee login");
+  }
+  const deviceCheck = await Device.findOne({ deviceId: deviceId });
+  if (user.role === "attendee" && !deviceCheck) {
+    throw new ForbiddenError("Invalid Device ID");
+  }
 
-    const isMatch = await bcrypt.compare(passWord, user.passwordHash);
-    if (!isMatch) {
-        throw new ForbiddenError("Invalid email or password");
-    }
+  const isMatch = await bcrypt.compare(passWord, user.passwordHash);
+  if (!isMatch) {
+    throw new ForbiddenError("Invalid email or password");
+  }
 
-    const indiaTime = new Date().toLocaleString("en-US", {
-        timeZone: "Asia/Kolkata",
-    });
-    await User.findByIdAndUpdate(user._id, { lastLogin: new Date(indiaTime) });
+  const indiaTime = new Date().toLocaleString("en-US", {
+    timeZone: "Asia/Kolkata",
+  });
+  await User.findByIdAndUpdate(user._id, { lastLogin: new Date(indiaTime) });
 
-    const payload = {
-        id: user._id,
-        email: user.email,
-        role: user.role,
-        ...(user.role === "attendee" && { deviceId: deviceId }),
-    };
+  const payload = {
+    id: user._id,
+    email: user.email,
+    role: user.role,
+    ...(user.role === "attendee" && { deviceId: deviceId }),
+  };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+  const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
 
-    return successResponse(res, { token }, "Login successful", 200);
+  return successResponse(res, { token }, "Login successful", 200);
 });
 
 export default auth;

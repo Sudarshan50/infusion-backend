@@ -56,8 +56,6 @@ device.createHealthCheck = asyncErrorHandler(async (req, res) => {
   successResponse(res, null, "Health check received", 200);
 });
 
-
-
 device.start = asyncErrorHandler(async (req, res) => {
   const { deviceId } = req.params;
   const { flowRateMlMin, plannedTimeMin, plannedVolumeMl, bolus } = req.body;

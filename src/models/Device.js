@@ -12,15 +12,19 @@ const { Schema } = mongoose;
  * Keep notifications/logs as references (separate collections) for scalability.
  */
 const DeviceSchema = new Schema(
-    {
-        deviceId: { type: String, required: true, unique: true, index: true },
-        location: { type: String, required: true },
-        status:{type:String,enum:["healthy","issue","running","paused","stopped","degraded"],default:"degraded"},
-        activeInfusion: { type: Schema.Types.ObjectId, ref: "Infusion" },
-        notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
-        logs: [{ type: Schema.Types.ObjectId, ref: "Log" }],
+  {
+    deviceId: { type: String, required: true, unique: true, index: true },
+    location: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["healthy", "issue", "running", "paused", "stopped", "degraded"],
+      default: "degraded",
     },
-    { timestamps: true }
+    activeInfusion: { type: Schema.Types.ObjectId, ref: "Infusion" },
+    notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
+    logs: [{ type: Schema.Types.ObjectId, ref: "Log" }],
+  },
+  { timestamps: true }
 );
 
 /* (Optional) Helper: cascade-delete notifications/logs/infusions when a device is removed.

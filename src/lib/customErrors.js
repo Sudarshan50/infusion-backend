@@ -11,7 +11,7 @@ class CustomError extends Error {
     this.statusCode = statusCode;
     this.isOperational = isOperational;
     this.name = this.constructor.name;
-    
+
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -20,7 +20,7 @@ class CustomError extends Error {
  * Validation error class
  */
 class ValidationError extends CustomError {
-  constructor(message = 'Validation Error', errors = []) {
+  constructor(message = "Validation Error", errors = []) {
     super(message, 400);
     this.errors = errors;
   }
@@ -30,7 +30,7 @@ class ValidationError extends CustomError {
  * Not found error class
  */
 class NotFoundError extends CustomError {
-  constructor(message = 'Resource not found') {
+  constructor(message = "Resource not found") {
     super(message, 404);
   }
 }
@@ -39,7 +39,7 @@ class NotFoundError extends CustomError {
  * Unauthorized error class
  */
 class UnauthorizedError extends CustomError {
-  constructor(message = 'Unauthorized access') {
+  constructor(message = "Unauthorized access") {
     super(message, 401);
   }
 }
@@ -48,7 +48,7 @@ class UnauthorizedError extends CustomError {
  * Forbidden error class
  */
 class ForbiddenError extends CustomError {
-  constructor(message = 'Access forbidden') {
+  constructor(message = "Access forbidden") {
     super(message, 403);
   }
 }
@@ -57,7 +57,7 @@ class ForbiddenError extends CustomError {
  * Bad request error class
  */
 class BadRequestError extends CustomError {
-  constructor(message = 'Bad request') {
+  constructor(message = "Bad request") {
     super(message, 400);
   }
 }
@@ -66,7 +66,7 @@ class BadRequestError extends CustomError {
  * Conflict error class
  */
 class ConflictError extends CustomError {
-  constructor(message = 'Resource conflict') {
+  constructor(message = "Resource conflict") {
     super(message, 409);
   }
 }
@@ -75,7 +75,7 @@ class ConflictError extends CustomError {
  * Internal server error class
  */
 class InternalServerError extends CustomError {
-  constructor(message = 'Internal server error') {
+  constructor(message = "Internal server error") {
     super(message, 500);
   }
 }
@@ -88,5 +88,5 @@ export {
   ForbiddenError,
   BadRequestError,
   ConflictError,
-  InternalServerError
+  InternalServerError,
 };

@@ -7,7 +7,9 @@ export const redisClient = createClient({
   password: process.env.REDIS_DB_PASS,
   socket: {
     host: process.env.REDIS_DB_HOST,
-    port: process.env.REDIS_DB_PORT ? parseInt(process.env.REDIS_DB_PORT) : 16061,
+    port: process.env.REDIS_DB_PORT
+      ? parseInt(process.env.REDIS_DB_PORT)
+      : 16061,
   },
 });
 redisClient.on("connect", () => {

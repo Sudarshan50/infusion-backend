@@ -1,6 +1,7 @@
 # Error Notification System - Implementation Complete! 🚨
 
 ## Overview
+
 The error notification system has been successfully implemented to provide real-time device error alerts through Socket.IO. This system allows ESP32 infusion pumps to report errors via MQTT, which are then immediately broadcast to subscribed frontend clients.
 
 ## Architecture
@@ -15,12 +16,14 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 ## Key Components
 
 ### 1. MQTT Service (`src/lib/mqtt.js`)
+
 - **New Method**: `handleDeviceError(topic, message)`
   - Parses MQTT error messages from topic `device/{deviceId}/error`
   - Caches error data in Redis with 5-minute TTL
   - Triggers immediate Socket.IO notification via `notifyDeviceError()`
 
 ### 2. Socket.IO Service (`src/lib/socket.js`)
+
 - **New Events**:
   - `subscribe:device:errors` - Subscribe to error notifications for a device
   - `unsubscribe:device:errors` - Unsubscribe from error notifications
@@ -31,6 +34,7 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 - **Room Structure**: `device:{deviceId}:errors`
 
 ### 3. Frontend Client (`public/device-monitor.html`)
+
 - **Enhanced Features**:
   - Automatic subscription to device errors alongside status and progress
   - Real-time error display with visual alerts (red border flash)
@@ -40,6 +44,7 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 ## Data Flow
 
 ### Error Message Format (MQTT)
+
 ```json
 {
   "deviceId": "PUMP_0001",
@@ -55,12 +60,14 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 ```
 
 ### Socket.IO Events
+
 - **Outgoing**: `device:error` - Broadcasts error data to subscribed clients
-- **Incoming**: 
+- **Incoming**:
   - `subscribe:device:errors` - Client subscribes to device errors
   - `unsubscribe:device:errors` - Client unsubscribes from device errors
 
 ### Redis Caching
+
 - **Key Pattern**: `device:{deviceId}:errors`
 - **TTL**: 300 seconds (5 minutes)
 - **Purpose**: Provide recent error history to newly connected clients
@@ -68,6 +75,7 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 ## Testing
 
 ### Test Script: `test-error-notification.js`
+
 - Simulates 5 different error scenarios
 - Tests various error types: PUMP_MALFUNCTION, LOW_BATTERY, FLOW_BLOCKAGE, etc.
 - Includes error clearing functionality
@@ -76,6 +84,7 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 ### How to Test:
 
 1. **Start the backend server:**
+
    ```bash
    npm start
    ```
@@ -85,6 +94,7 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
    - The page will auto-subscribe to PUMP_0001
 
 3. **Run the error simulation:**
+
    ```bash
    node test-error-notification.js
    ```
@@ -96,13 +106,13 @@ ESP32 Device → MQTT → Node.js Backend → Socket.IO → Frontend Clients
 
 ## Error Types Supported
 
-| Error Type | Severity | Description |
-|------------|----------|-------------|
+| Error Type       | Severity | Description                            |
+| ---------------- | -------- | -------------------------------------- |
 | PUMP_MALFUNCTION | CRITICAL | Motor overheating or mechanical issues |
-| LOW_BATTERY | WARNING | Battery level below safe threshold |
-| FLOW_BLOCKAGE | CRITICAL | Infusion line obstruction detected |
-| SENSOR_ERROR | WARNING | Sensor reading anomalies |
-| NETWORK_ISSUE | INFO | Connectivity problems |
+| LOW_BATTERY      | WARNING  | Battery level below safe threshold     |
+| FLOW_BLOCKAGE    | CRITICAL | Infusion line obstruction detected     |
+| SENSOR_ERROR     | WARNING  | Sensor reading anomalies               |
+| NETWORK_ISSUE    | INFO     | Connectivity problems                  |
 
 ## Integration with Existing System
 

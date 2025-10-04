@@ -8,7 +8,6 @@ import {
   notFoundHandler,
 } from "./src/middleware/errorHandler.js";
 import { successResponse } from "./src/lib/responseUtils.js";
-import exampleRoutes from "./src/routes/exampleRoutes.js";
 import db from "./src/lib/db.js";
 import { connectToRedis } from "./src/lib/redis.js";
 import router from "./src/routes/index.js";
@@ -25,7 +24,7 @@ app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static("public"));
 
 app.get("/", (req, res) => {
   successResponse(res, null, "The service is healthy and running!");
@@ -61,14 +60,14 @@ db()
     process.exit(1);
   });
 
-process.on('SIGINT', async () => {
-  console.log('🛑 Shutting down gracefully...');
+process.on("SIGINT", async () => {
+  console.log("🛑 Shutting down gracefully...");
   await mqttService.disconnect();
   process.exit(0);
 });
 
-process.on('SIGTERM', async () => {
-  console.log('🛑 Shutting down gracefully...');
+process.on("SIGTERM", async () => {
+  console.log("🛑 Shutting down gracefully...");
   await mqttService.disconnect();
   process.exit(0);
 });

@@ -5,12 +5,12 @@ This implementation provides a complete MQTT-based device control system for ESP
 ## Architecture Overview
 
 ```
-Frontend Dashboard (Vercel) 
+Frontend Dashboard (Vercel)
     ↓ HTTP API calls
 Backend Server (Node.js)
     ↓ MQTT commands
 HiveMQ Cloud Broker
-    ↓ MQTT subscriptions  
+    ↓ MQTT subscriptions
 ESP32 Infusion Pumps
     ↑ MQTT telemetry/status
 HiveMQ Cloud Broker
@@ -23,9 +23,11 @@ Frontend Dashboard (Vercel)
 ## MQTT Topics Structure
 
 ### Command Topics (Backend → ESP32)
+
 - `devices/{deviceId}/commands` - Control commands sent to devices
 
 ### Status Topics (ESP32 → Backend)
+
 - `devices/{deviceId}/status` - Device health and status updates
 - `devices/{deviceId}/telemetry` - Real-time infusion progress data
 - `devices/{deviceId}/error` - Error messages and alerts
@@ -34,6 +36,7 @@ Frontend Dashboard (Vercel)
 ## API Endpoints
 
 ### Device Control
+
 - `POST /api/devices/:deviceId/start` - Start infusion
 - `POST /api/devices/:deviceId/stop` - Stop infusion
 - `POST /api/devices/:deviceId/pause` - Pause infusion
@@ -42,12 +45,14 @@ Frontend Dashboard (Vercel)
 - `GET /api/devices/status/:deviceId` - Get device status
 
 ### Device Management
+
 - `POST /api/devices/create` - Create new device
 - `POST /api/devices/health` - Health check endpoint
 
 ## Message Formats
 
 ### Start Infusion Command
+
 ```json
 {
   "command": "START_INFUSION",
@@ -66,6 +71,7 @@ Frontend Dashboard (Vercel)
 ```
 
 ### Device Telemetry Response
+
 ```json
 {
   "deviceId": "PUMP_0001",
@@ -85,6 +91,7 @@ Frontend Dashboard (Vercel)
 ```
 
 ### Device Status Response
+
 ```json
 {
   "status": "running",
@@ -110,6 +117,7 @@ HIVEMQ_PASSWORD=your-hivemq-password
 ## Getting Started
 
 1. **Install dependencies:**
+
    ```bash
    npm install mqtt
    ```
@@ -119,11 +127,13 @@ HIVEMQ_PASSWORD=your-hivemq-password
    - Update HiveMQ credentials
 
 3. **Start the server:**
+
    ```bash
    npm run dev
    ```
 
 4. **Test the API:**
+
    ```bash
    # Create a device
    curl -X POST http://localhost:3000/api/devices/create \

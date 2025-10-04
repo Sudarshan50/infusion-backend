@@ -43,11 +43,13 @@ infusion-backend/
 
 1. Clone the repository
 2. Install dependencies:
+
    ```bash
    npm install
    ```
 
 3. Create environment file:
+
    ```bash
    cp .env.example .env
    ```
@@ -62,18 +64,22 @@ infusion-backend/
 ## API Endpoints
 
 ### Health Check
+
 - `GET /health` - Server health check
 
 ### API Base
+
 - `GET /api` - API information
 
 ### Authentication
+
 - `POST /api/auth/login` - User login
 - `POST /api/auth/register` - User registration
 - `POST /api/auth/logout` - User logout
 - `GET /api/auth/me` - Get current user profile
 
 ### Users
+
 - `GET /api/users` - Get all users
 - `GET /api/users/:id` - Get user by ID
 - `POST /api/users` - Create new user
@@ -83,6 +89,7 @@ infusion-backend/
 ## Usage
 
 Start the server:
+
 ```bash
 npm start
 ```
@@ -92,6 +99,7 @@ The server will be running on `http://localhost:3000`
 ## Development
 
 For development with auto-restart:
+
 ```bash
 npm run dev
 ```
