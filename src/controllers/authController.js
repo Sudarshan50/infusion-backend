@@ -44,9 +44,9 @@ auth.createUser = asyncErrorHandler(async (req, res) => {
 });
 
 auth.login = asyncErrorHandler(async (req, res) => {
-  const { email, passWord, deviceId } = req.body;
+  const { email, password, deviceId } = req.body;
   const error = [];
-  if (!passWord) {
+  if (!password) {
     error.push("Password is required");
   }
   if (!email) {
@@ -67,7 +67,7 @@ auth.login = asyncErrorHandler(async (req, res) => {
     throw new ForbiddenError("Invalid Device ID");
   }
 
-  const isMatch = await bcrypt.compare(passWord, user.passwordHash);
+  const isMatch = await bcrypt.compare(password, user.passwordHash);
   if (!isMatch) {
     throw new ForbiddenError("Invalid email or password");
   }
@@ -87,6 +87,28 @@ auth.login = asyncErrorHandler(async (req, res) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
 
   return successResponse(res, { token }, "Login successful", 200);
+});
+
+auth.updateUser = asyncErrorHandler(async (req, res) => {
+  const {name,email} = req.body;
+  const userId = req.user.id;
+
+  const checkUser = await User.findById(userId);
+  if (!checkUser) {
+    throw new ForbiddenError("User not found");
+  }
+  if(email){
+    const emailExists = await User.findOne({email:email});
+    if(emailExists && emailExists._id.toString() !== userId){
+      throw new BadRequestError("Email already in use");
+    }
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $set: { name:name || checkUser.name, email:email || checkUser.email } },
+    { new: true }
+  );
+  successResponse(res, { user: updatedUser }, "User updated successfully", 200);
 });
 
 export default auth;
